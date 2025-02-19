@@ -1,8 +1,9 @@
-﻿using Content.Shared.Chemistry.Components;
+﻿// his is the official port from the BACKMEN project. check the original repository to avoid license violations
+
+using Content.Shared.Chemistry.Components;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared.Backmen.FootPrint;
-
 /// <summary>
 /// This is used for marking footsteps, handling footprint drawing.
 /// </summary>

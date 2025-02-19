@@ -102,3 +102,6 @@
     noRot: true
     drawdepth: Mobs
     scale: 0.9, 0.8
+  - type: FootPrints
+    leftBarePrint: "footprint-left-bare-lizard"
+    rightBarePrint: "footprint-right-bare-lizard"

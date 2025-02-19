@@ -130,3 +130,6 @@
   components:
   - type: HumanoidAppearance
     species: Xenomorph
+  - type: FootPrints
+    leftBarePrint: "footprint-left-bare-lizard"
+    rightBarePrint: "footprint-right-bare-lizard"
