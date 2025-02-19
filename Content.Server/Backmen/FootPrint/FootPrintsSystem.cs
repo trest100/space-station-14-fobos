@@ -3,10 +3,11 @@ using Content.Shared.Inventory;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Backmen.FootPrint;
-using Content.Shared.Backmen.Standing;
+using Content.Shared.DeadSpace.LieDown;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Gravity;
+using Robust.Shared.GameStates;
 using Robust.Shared.Map;
 using Robust.Shared.Random;
 
@@ -26,7 +27,7 @@ public sealed class FootPrintsSystem : EntitySystem
     private EntityQuery<TransformComponent> _transformQuery;
     private EntityQuery<MobThresholdsComponent> _mobThresholdQuery;
     private EntityQuery<AppearanceComponent> _appearanceQuery;
-    private EntityQuery<LayingDownComponent> _layingQuery;
+    private EntityQuery<LieDownComponent> _layingQuery;
 
    public override void Initialize()
    {
@@ -35,13 +36,19 @@ public sealed class FootPrintsSystem : EntitySystem
        _transformQuery = GetEntityQuery<TransformComponent>();
        _mobThresholdQuery = GetEntityQuery<MobThresholdsComponent>();
        _appearanceQuery = GetEntityQuery<AppearanceComponent>();
-       _layingQuery = GetEntityQuery<LayingDownComponent>();
+       _layingQuery = GetEntityQuery<LieDownComponent>();
 
        SubscribeLocalEvent<FootPrintsComponent, ComponentStartup>(OnStartupComponent);
        SubscribeLocalEvent<FootPrintsComponent, MoveEvent>(OnMove);
+       SubscribeLocalEvent<FootPrintComponent, ComponentGetState>(OnGetState);
    }
 
-    private void OnStartupComponent(EntityUid uid, FootPrintsComponent comp, ComponentStartup args)
+   private void OnGetState(Entity<FootPrintComponent> ent, ref ComponentGetState args)
+   {
+       args.State = new FootPrintState(TerminatingOrDeleted(ent.Comp.PrintOwner) ? NetEntity.Invalid : GetNetEntity(ent.Comp.PrintOwner));
+   }
+
+   private void OnStartupComponent(EntityUid uid, FootPrintsComponent comp, ComponentStartup args)
     {
         comp.StepSize += _random.NextFloat(-0.05f, 0.05f);
     }
@@ -52,7 +59,7 @@ public sealed class FootPrintsSystem : EntitySystem
         if (comp.PrintsColor.A <= 0f)
             return;
 
-        if (!_transformQuery.TryComp(uid, out var transform))
+        if (TerminatingOrDeleted(uid) || !_transformQuery.TryComp(uid, out var transform))
             return;
 
         if (_gravity.IsWeightless(uid, xform: transform))
