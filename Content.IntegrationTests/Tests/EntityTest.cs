@@ -240,6 +240,7 @@ namespace Content.IntegrationTests.Tests
                 "StationEvent",
                 "TimedDespawn",
 
+                "Eftpos", // attach to bank account on mapinit
                 // makes an announcement on mapInit.
                 "AnnounceOnSpawn",
             };
@@ -355,6 +356,7 @@ namespace Content.IntegrationTests.Tests
                 "LoadedChunk", // Worldgen chunk loading malding.
                 "BiomeSelection", // Whaddya know, requires config.
                 "ActivatableUI", // Requires enum key
+                "StationDnd", // DS14: Requires config
             };
 
             // TODO TESTS

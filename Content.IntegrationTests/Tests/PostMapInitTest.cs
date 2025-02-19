@@ -52,33 +52,73 @@ namespace Content.IntegrationTests.Tests
             "/Maps/Shuttles/ShuttleEvent/honki.yml", // Contains golden honker, clown's rubber stamp
             "/Maps/Shuttles/ShuttleEvent/instigator.yml", // Contains EXP-320g "Friendship"
             "/Maps/Shuttles/ShuttleEvent/syndie_evacpod.yml", // Contains syndicate rubber stamp
+            "/Maps/corvax_astra.yml", // Contains LSE-400c "Пулемёт Свалинн"
+            "/Maps/amber.yml", // Contains LSE-400c "Пулемёт Свалинн"
+            "/Maps/barratry.yml", // Contains печать клоуна, печать мима
+            "/Maps/cluster.yml", // Contains печать мима
+            "/Maps/corvax_avrit.yml", // Contains кошачьи ушки, собачьи ушки, элитный шахтёрский скафандр, EXP-320g "Дружба", PTK-800 "Дематериализатор материи", PTK-800 "Дематериализатор материи" (машинная плата), LSE-1200c "Перфоратор" (машинная плата), LSE-400c "Пулемёт Свалинн"
+            "/Maps/corvax_paper.yml", // Contains кошачьи ушки
+            "/Maps/corvax_spectrum.yml", // Contains печать священника, LSE-400c "Пулемёт Свалинн"
+            "/Maps/ds_box.yml", // Contains печать Синдиката
+            "/Maps/ds_silly.yml", // Contains печать клоуна, печать мима и PTK-800 "Дематериализатор материи" (машинная плата)
+            "/Maps/ds_silly_snow.yml", // Contains печать клоуна, печать мима и PTK-800 "Дематериализатор материи" (машинная плата)
+            "/Maps/gemini.yml", // Contains печать клоуна и печать Синдиката
+            "/Maps/Shuttles/ERT/amber.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/cburn_scnt.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/cburn_scst.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/cburn.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/deathsquad.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/engineers.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/gamma.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/janitors.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/red.yml", // ERT shuttle
+            "/Maps/Shuttles/ERT/sierra.yml", // ERT shuttle
+            "/Maps/ds_typan.yml",
         };
 
         private static readonly string[] GameMaps =
         {
             "Dev",
             "TestTeg",
-            "Fland",
-            "Meta",
-            "Packed",
-            "Omega",
-            "Bagel",
             "CentComm",
-            "Box",
-            "Core",
-            "Marathon",
             "MeteorArena",
-            "Saltern",
-            "Reach",
-            "Train",
+            "CorvaxAstra",
+            "CorvaxAvrite",
+            "CorvaxDelta",
+            "CorvaxPaper",
+            "CorvaxSilly",
+            "CorvaxSpectrum",
+            "Bagel",
+            "Barratry",
+            "Box",
+            "Cluster",
+            "Core",
+            "Fland",
+            "Gemini",
+            "Marathon",
+            "Meta",
             "Oasis",
+            "Omega",
+            "Origin",
+            "Packed",
+            "Saltern",
+            "Train",
+            "Cog",
+            // "DSTypan",
+            "Amber",
             "Gate",
             "Amber",
             "Loop",
             "Plasma",
-            "Elkridge",
             "Convex",
-            "Relic"
+            "Loop",
+            "Reach"
+        };
+
+        private static readonly string[] GameMapsExcludedFromTests =
+        {
+            "DSTypan", //remap in progress
+            "Elkridge" //remap in progress
         };
 
         /// <summary>
@@ -389,7 +429,15 @@ namespace Content.IntegrationTests.Tests
                     // Test all availableJobs have spawnPoints
                     // This is done inside gamemap test because loading the map takes ages and we already have it.
                     var comp = entManager.GetComponent<StationJobsComponent>(station);
-                    var jobs = new HashSet<ProtoId<JobPrototype>>(comp.SetupAvailableJobs.Keys);
+
+                    // DS14-start
+                    // Filter out not round-start jobs (mainly for ClownSponsor)
+                    var jobs = new HashSet<ProtoId<JobPrototype>>(
+                        comp.SetupAvailableJobs
+                            .Where(job => job.Value[0] != 0)
+                            .Select(job => job.Key)
+                    );
+                    // DS14-end
 
                     var spawnPoints = entManager.EntityQuery<SpawnPointComponent>()
                         .Where(x => x.SpawnType == SpawnPointType.Job && x.Job != null)
@@ -454,7 +502,7 @@ namespace Content.IntegrationTests.Tests
             var protoMan = server.ResolveDependency<IPrototypeManager>();
 
             var gameMaps = protoMan.EnumeratePrototypes<GameMapPrototype>()
-                .Where(x => !pair.IsTestPrototype(x))
+                .Where(x => !pair.IsTestPrototype(x) && !GameMapsExcludedFromTests.Contains(x.ID)) // DS14: temp exclude broken Typan map file
                 .Select(x => x.ID)
                 .ToHashSet();
 

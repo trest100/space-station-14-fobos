@@ -8,6 +8,7 @@ using Content.Server.Decals;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Shuttles.Events;
 using Content.Server.Shuttles.Systems;
+using Content.Server.Communications;  // DS14
 using Content.Shared.Atmos;
 using Content.Shared.Decals;
 using Content.Shared.Ghost;
@@ -78,6 +79,8 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
     private readonly Dictionary<BiomeComponent,
         Dictionary<string, HashSet<Vector2i>>> _markerChunks = new();
 
+    private EntityQuery<CommunicationsConsoleComponent> _commsConsoleQuery; // DS14
+
     public override void Initialize()
     {
         base.Initialize();
@@ -86,6 +89,7 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         _fixturesQuery = GetEntityQuery<FixturesComponent>();
         _ghostQuery = GetEntityQuery<GhostComponent>();
         _xformQuery = GetEntityQuery<TransformComponent>();
+        _commsConsoleQuery = GetEntityQuery<CommunicationsConsoleComponent>(); // DS14
         SubscribeLocalEvent<BiomeComponent, MapInitEvent>(OnBiomeMapInit);
         SubscribeLocalEvent<FTLStartedEvent>(OnFTLStarted);
         SubscribeLocalEvent<ShuttleFlattenEvent>(OnShuttleFlatten);
@@ -321,6 +325,13 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
 
     private bool CanLoad(EntityUid uid)
     {
+        // DS14-start
+        if (_commsConsoleQuery.HasComp(uid))
+        {
+            return true;
+        }
+        // DS14-end
+
         return !_ghostQuery.HasComp(uid);
     }
 

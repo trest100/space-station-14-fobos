@@ -37,6 +37,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Robust.Shared.Audio;
 
 namespace Content.Server.Shuttles.Systems;
 
@@ -391,7 +392,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
 
         var audioFile = result.ResultType == ShuttleDockResultType.NoDock
             ? "/Audio/Misc/notice1.ogg"
-            : "/Audio/Announcements/shuttle_dock.ogg";
+            : "/Audio/_DeadSpace/Announcements/emergency_s_docked.ogg"; // DS14-Announcements
 
         // TODO: Need filter extensions or something don't blame me.
         _audio.PlayGlobal(audioFile, Filter.Broadcast(), true);
