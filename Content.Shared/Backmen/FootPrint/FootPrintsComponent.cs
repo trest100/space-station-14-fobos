@@ -9,7 +9,7 @@ namespace Content.Shared.Backmen.FootPrint;
 public sealed partial class FootPrintsComponent : Component
 {
     [ViewVariables(VVAccess.ReadOnly), DataField("path")]
-    public ResPath RsiPath = new("/Textures/Effects/footprints.rsi");
+    public ResPath RsiPath = new("/Textures/_Backmen/Effects/footprints.rsi");
 
     // all of those are set as a layer
     [ViewVariables(VVAccess.ReadOnly), DataField]
