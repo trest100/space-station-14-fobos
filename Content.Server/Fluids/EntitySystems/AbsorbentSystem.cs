@@ -1,6 +1,5 @@
 using System.Numerics;
 using Content.Server.Popups;
-using Content.Shared.Backmen.FootPrint;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.FixedPoint;
@@ -14,6 +13,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Backmen.FootPrint;
 
 namespace Content.Server.Fluids.EntitySystems;
 
@@ -26,10 +26,10 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
     [Dependency] private readonly PuddleSystem _puddleSystem = default!;
     [Dependency] private readonly SharedMeleeWeaponSystem _melee = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainerSystem = default!;
     [Dependency] private readonly UseDelaySystem _useDelay = default!;
     [Dependency] private readonly MapSystem _mapSystem = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!; // Backmen-footsteps
 
     public override void Initialize()
     {
@@ -113,11 +113,11 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
             && _useDelay.IsDelayed((used, useDelay)))
             return;
 
-        // BACKMEN EDIT START
+        // Backmen-footsteps-start
         // Footsteps cleaning logic, try to grab from
         if (TryFootStepInteract(user, used, target, component, useDelay, absorberSoln.Value))
             return;
-        // BACKMEN EDIT END
+
 
         // If it's a puddle try to grab from
         if (TryPuddleInteract(user, used, target, component, useDelay, absorberSoln.Value))
@@ -125,6 +125,7 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
 
         // If it's refillable try to transfer
         TryRefillableInteract(user, used, target, component, useDelay, absorberSoln.Value);
+        // Backmen-footsteps-end
     }
 
     /// <summary>
@@ -176,9 +177,9 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
         }
 
         var refillableSolution = refillableSoln.Comp.Solution;
-        var transferAmount = component.PickupAmount < refillableSolution.AvailableVolume
-            ? component.PickupAmount
-            : refillableSolution.AvailableVolume;
+        var transferAmount = component.PickupAmount < refillableSolution.AvailableVolume ?
+            component.PickupAmount :
+            refillableSolution.AvailableVolume;
 
         if (transferAmount <= 0)
         {
@@ -224,9 +225,9 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
             return false;
         }
 
-        var waterPulled = component.PickupAmount < absorbentSolution.AvailableVolume
-            ? component.PickupAmount
-            : absorbentSolution.AvailableVolume;
+        var waterPulled = component.PickupAmount < absorbentSolution.AvailableVolume ?
+            component.PickupAmount :
+            absorbentSolution.AvailableVolume;
 
         var refillableSolution = refillableSoln.Comp.Solution;
         var waterFromRefillable = refillableSolution.SplitSolutionWithOnly(waterPulled, PuddleSystem.EvaporationReagents);
@@ -332,7 +333,7 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
         return true;
     }
 
-    // BACKMEN EDIT START
+    // Backmen-footsteps-start
     private bool TryFootStepInteract(EntityUid user, EntityUid used, EntityUid target, AbsorbentComponent absorber, UseDelayComponent? useDelay, Entity<SolutionComponent> absorberSoln)
     {
         if (!HasComp<FootPrintComponent>(target)) // Perform a check if it was a footprint that was clicked on
@@ -395,5 +396,5 @@ public sealed class AbsorbentSystem : SharedAbsorbentSystem
         _melee.DoLunge(user, used, Angle.Zero, localPos, null, false);
         return true;
     }
-    // BACKMEN EDIT END
+    // Backmen-footsteps-end
 }

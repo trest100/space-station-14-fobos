@@ -1,3 +1,6 @@
+// Мёртвый Космос, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/dead-space-server/space-station-14-fobos/master/LICENSE.TXT
+// Official port from the BACKMEN project. Make sure to review the original repository to avoid license violations.
+
 using System.Linq;
 using Content.Shared.Backmen.FootPrint;
 using Content.Shared.Chemistry.Components.SolutionManager;
@@ -12,21 +15,22 @@ public sealed class PuddleFootPrintsSystem : EntitySystem
 {
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainerSystem = default!;
+
     private EntityQuery<AppearanceComponent> _appearanceQuery;
     private EntityQuery<PuddleComponent> _puddleQuery;
     private EntityQuery<FootPrintsComponent> _footPrintsQuery;
     private EntityQuery<SolutionContainerManagerComponent> _solutionContainerManageQuery;
 
     public override void Initialize()
-   {
-       base.Initialize();
-       SubscribeLocalEvent<PuddleFootPrintsComponent, EndCollideEvent>(OnStepTrigger);
+    {
+        base.Initialize();
+        SubscribeLocalEvent<PuddleFootPrintsComponent, EndCollideEvent>(OnStepTrigger);
 
-       _appearanceQuery = GetEntityQuery<AppearanceComponent>();
-       _puddleQuery = GetEntityQuery<PuddleComponent>();
-       _footPrintsQuery = GetEntityQuery<FootPrintsComponent>();
-       _solutionContainerManageQuery = GetEntityQuery<SolutionContainerManagerComponent>();
-   }
+        _appearanceQuery = GetEntityQuery<AppearanceComponent>();
+        _puddleQuery = GetEntityQuery<PuddleComponent>();
+        _footPrintsQuery = GetEntityQuery<FootPrintsComponent>();
+        _solutionContainerManageQuery = GetEntityQuery<SolutionContainerManagerComponent>();
+    }
 
     private void OnStepTrigger(EntityUid uid, PuddleFootPrintsComponent comp, ref EndCollideEvent args)
     {

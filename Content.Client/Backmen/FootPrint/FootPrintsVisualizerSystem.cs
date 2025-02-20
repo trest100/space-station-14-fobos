@@ -1,4 +1,7 @@
-﻿using Content.Shared.Backmen.FootPrint;
+﻿// Мёртвый Космос, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/dead-space-server/space-station-14-fobos/master/LICENSE.TXT
+// Official port from the BACKMEN project. Make sure to review the original repository to avoid license violations.
+
+using Content.Shared.Backmen.FootPrint;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.GameStates;

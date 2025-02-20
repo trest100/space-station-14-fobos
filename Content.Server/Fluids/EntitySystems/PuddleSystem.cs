@@ -340,7 +340,7 @@ public sealed partial class PuddleSystem : SharedPuddleSystem
 
         _deletionQueue.Remove(entity);
         UpdateSlip(entity, entity.Comp, args.Solution);
-        UpdateSlow(entity, args.Solution); // backmen: footsteps
+        UpdateSlow(entity, args.Solution); // Backmen-footsteps
         UpdateEvaporation(entity, args.Solution);
         UpdateAppearance(entity, entity.Comp);
     }
@@ -421,12 +421,12 @@ public sealed partial class PuddleSystem : SharedPuddleSystem
         }
     }
 
-    private void UpdateSlow(Entity<PuddleComponent> uid, Solution solution) // backmen: footsteps
+    private void UpdateSlow(Entity<PuddleComponent> uid, Solution solution) // Backmen-footsteps
     {
-        // start-backmen: footsteps
+        // Backmen-footsteps-start
         if (!uid.Comp.ViscosityAffectsMovement)
             return;
-        // end-backmen: footsteps
+        // Backmen-footsteps-end
 
         var maxViscosity = 0f;
         foreach (var (reagent, _) in solution.Contents)
