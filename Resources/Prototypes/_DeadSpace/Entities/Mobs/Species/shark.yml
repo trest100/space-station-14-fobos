@@ -47,6 +47,10 @@
   - type: Sanity # DS14
   - type: TypingIndicator
     proto: plafeim
+  - type: FootPrints
+    leftBarePrint: "footprint-left-bare-lizard"
+    rightBarePrint: "footprint-right-bare-lizard"
+
 
 - type: entity
   parent: BaseSpeciesDummy
@@ -61,6 +65,3 @@
     - HeadTop
     - HeadSide
     - Tail
-  - type: FootPrints
-    leftBarePrint: "footprint-left-bare-lizard"
-    rightBarePrint: "footprint-right-bare-lizard"

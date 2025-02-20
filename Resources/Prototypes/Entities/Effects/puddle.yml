@@ -144,7 +144,6 @@
       puddle:
         maxVol: 1000
   - type: Puddle
-  - type: PuddleFootPrints
   - type: MixableSolution
     solution: puddle
   - type: Appearance
@@ -166,8 +165,9 @@
   - type: Tag
     tags:
     - DNASolutionScannable
+  - type: PuddleFootPrints # Backmen-footsteps
 
-# start-backmen: footsteps
+# Backmen-footsteps-start
 - type: entity
   name: след
   id: Footstep
@@ -207,4 +207,4 @@
       solution: step
       viscosityAffectsMovement: false
     - type: Appearance
-# end-backmen: footsteps
+# Backmen-footsteps-end
